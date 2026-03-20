@@ -1,10 +1,14 @@
 # Azure AI Browser Extension Workshop
 ## Lab Manual — Build Your First AI-Powered Chrome Extension
 
+**Author:** Santos Martinez  
+**Contributors:** William Gonzalez, Kyarra Gutierrez, Andrea Martini, David Warm, Andre Rodrigues  
+**Event:** Hackabull  
+
 **Duration:** 1 hour (30-min demo + 30-min hands-on)  
-**Audience:** University students, hackathon participants, beginners  
-**Prerequisites:** A laptop with Chrome/Edge, a GitHub account, basic HTML/JS knowledge  
-**Goal:** Build a working AI chatbot browser extension using Azure Bot Service + Azure OpenAI
+**Audience:** University hackers, hackathon participants, beginners  
+**Prerequisites:** A laptop with Chrome/Edge, VS Code with GitHub Copilot (or access to any AI assistant)  
+**Goal:** Build a working AI chatbot browser extension using a single AI prompt + Azure OpenAI
 
 ---
 
@@ -12,10 +16,10 @@
 
 | Segment | Time | Activity |
 |---------|------|----------|
-| **Part 1: Demo** | 0:00–0:30 | Professor walks through the architecture, shows USF AI, explains Azure services |
-| **Part 2: Lab** | 0:30–1:00 | Students build a minimal AI extension from a starter template |
+| **Part 1: Demo** | 0:00–0:30 | Hacker Leader walks through the architecture, shows USF AI, explains Azure services |
+| **Part 2: Lab** | 0:30–1:00 | Hackers vibe-code a full AI extension using a single prompt |
 
-### What Students Will Build
+### What Hackers Will Build
 
 A Chrome extension that:
 1. Shows a floating chat button on any webpage
@@ -23,7 +27,8 @@ A Chrome extension that:
 3. Sends it to Azure OpenAI (GPT-4o) for a response
 4. Displays the AI answer in the chat window
 
-**No backend needed.** The extension calls Azure APIs directly.
+**No backend needed.** The extension calls Azure APIs directly.  
+**No prior coding experience needed.** Hackers will generate the entire extension with a single AI prompt — this is **vibe coding**.
 
 ---
 
@@ -104,7 +109,7 @@ A Chrome extension that:
 
 ### Slide 5: Your Turn! (2 min)
 
-> "Now you'll build a mini version of this in 30 minutes. Open the starter repo and follow the lab manual."
+> "Now you'll build a mini version of this in 30 minutes using a single AI prompt. Open VS Code, fire up Copilot, and follow the lab manual. You're about to vibe code your first browser extension."
 
 **Share the starter repo URL on screen.**
 
@@ -116,8 +121,7 @@ A Chrome extension that:
 | Azure OpenAI Quickstart | https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart |
 | Azure Bot Service Docs | https://learn.microsoft.com/en-us/azure/bot-service/ |
 | Microsoft AI Principles | https://www.microsoft.com/en-us/ai/principles-and-approach |
-| USF AI GitHub | https://github.com/scim-microsoft/USF-AI-Workshop |
-| Vibe Secure Framework | https://github.com/samarti_microsoft/vibesecure |
+| USF AI GitHub | https://github.com/hanshisantos/USF-AI-Workshop |
 | Azure Free Account | https://azure.microsoft.com/en-us/free/ |
 
 ---
@@ -127,353 +131,160 @@ A Chrome extension that:
 ### Prerequisites Checklist
 
 - [ ] Chrome or Edge browser installed
-- [ ] Text editor (VS Code recommended)
-- [ ] Azure OpenAI API key (provided by instructor OR use free trial)
-- [ ] Basic familiarity with HTML and JavaScript
+- [ ] **GitHub Copilot** (in VS Code) or access to **ChatGPT / any AI assistant**
+- [ ] Azure OpenAI API key (provided by Hacker Leader OR use free trial)
+- [ ] VS Code installed
 
-### Step 1: Create the Project Structure (3 min)
+> **This lab is designed for AI-assisted development ("vibe coding").** You will use a single prompt to generate your entire extension, then configure and test it. No prior JavaScript experience required!
 
-Create a folder called `usf-ai-extension/` with these files:
+---
+
+### Step 1: Set Up Your Workspace (2 min)
+
+1. Open **VS Code**
+2. Create a new empty folder called `usf-ai-extension`
+3. Open that folder in VS Code (`File → Open Folder`)
+
+---
+
+### Step 2: Generate the Entire Extension With One Prompt (5 min)
+
+Open your AI coding assistant (GitHub Copilot Chat, ChatGPT, or any AI tool) and paste the following prompt:
+
+> **Copy this entire prompt and paste it into your AI assistant:**
+
+~~~
+Build me a Chrome browser extension (Manifest V3) called "USF AI Assistant" with these 4 files:
+
+1. **manifest.json** — Manifest V3, name "USF AI Assistant", version "1.0.0", permissions: activeTab and storage, host_permissions for "https://*.openai.azure.com/*", background service worker (background.js), content script that injects content.js and styles.css on all URLs at document_idle, CSP: script-src 'self'; object-src 'none', icon: icon.png (48px).
+
+2. **content.js** — An IIFE that:
+   - Creates a floating action button (FAB) in the bottom-right corner with a 🤖 emoji
+   - Creates a chat window (hidden by default) with: a header bar (title "🤖 AI Assistant" + close button), a scrollable messages area, and an input bar with a text field and Send button
+   - Toggles the chat open/closed when clicking the FAB or close button
+   - On first open, displays a welcome message: "Hey there, Bull! 🐂 I'm your AI Assistant. Ask me anything!"
+   - Has an addMessage(text, sender) function that appends styled message bubbles (sender is 'user' or 'bot')
+   - Has a sendMessage() function that: adds the user message, shows "Thinking...", sends the question to the background worker via chrome.runtime.sendMessage with action 'askAI', removes the "Thinking..." message, and displays the response or error
+   - Enter key and Send button both trigger sendMessage()
+   - Includes a guard to prevent double-injection
+
+3. **background.js** — A service worker that:
+   - Has config constants at the top: AZURE_OPENAI_ENDPOINT (placeholder 'https://YOUR-RESOURCE.openai.azure.com'), AZURE_OPENAI_KEY (placeholder 'YOUR-API-KEY-HERE'), AZURE_OPENAI_DEPLOYMENT ('gpt-4o'), API_VERSION ('2024-08-01-preview')
+   - Has a SYSTEM_PROMPT that says: "You are a helpful AI assistant for university students. Keep answers concise (under 150 words). Be friendly and encouraging."
+   - Listens for messages with action 'askAI', calls Azure OpenAI chat completions endpoint, returns the answer
+   - Uses fetch with POST, Content-Type application/json, api-key header, sends system + user messages, max_tokens 300, temperature 0.7
+   - Returns true from the listener to keep the async channel open
+
+4. **styles.css** — Styles for the extension using USF green (#006747) as the primary color:
+   - FAB: fixed bottom-right, 56px circle, green background, white text, z-index 999999, scale hover effect
+   - Chat window: fixed bottom-right, 370x500px, white background, rounded corners, shadow, flex column layout
+   - Header: green gradient background, white text, flex row with space-between
+   - Messages area: flex 1, scrollable, light background
+   - Message bubbles: rounded, max-width 85%, fade-in animation. User messages: green background, right-aligned. Bot messages: white with border, left-aligned
+   - Input area: flex row, text input with green focus border, green send button
+
+Output each file with its complete content. Do not use any frameworks or build tools — plain HTML/CSS/JS only.
+~~~
+
+**What just happened?** You described the entire application to AI and it generated all the code for you. This is **vibe coding** — you focus on *what* you want, and AI writes the *how*.
+
+---
+
+### Step 3: Create the Files (3 min)
+
+Take the AI's output and create each file in your `usf-ai-extension/` folder:
 
 ```
 usf-ai-extension/
 ├── manifest.json
 ├── content.js
 ├── background.js
-├── styles.css
-└── icon.png (any 48x48 PNG)
+└── styles.css
 ```
 
-### Step 2: Write the Manifest (3 min)
+**If using GitHub Copilot in VS Code:** You can ask Copilot to create the files directly in your workspace. Use the `/new` command or ask it to "create these files in my workspace."
 
-Create `manifest.json`:
+**If using ChatGPT or another web-based AI:** Copy each file's content and create the files manually in VS Code.
 
-```json
-{
-  "manifest_version": 3,
-  "name": "USF AI Assistant",
-  "version": "1.0.0",
-  "description": "A simple AI chatbot browser extension",
-  "author": "Your Name",
-  "permissions": ["activeTab", "storage"],
-  "host_permissions": [
-    "https://*.openai.azure.com/*"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["styles.css"],
-      "run_at": "document_idle"
-    }
-  ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none';"
-  },
-  "icons": {
-    "48": "icon.png"
-  }
-}
-```
+---
 
-**Teaching point:** Explain each field — what `content_scripts` means, why we need `host_permissions`.
+### Step 4: Add Your API Key (2 min)
 
-### Step 3: Build the Chat UI (5 min)
-
-Create `content.js`:
+Open `background.js` and replace the two placeholder values at the top:
 
 ```javascript
-(function() {
-    'use strict';
-
-    // Don't inject twice
-    if (document.getElementById('usf-ai-fab')) return;
-
-    // ── Floating Action Button ──
-    const fab = document.createElement('button');
-    fab.id = 'usf-ai-fab';
-    fab.textContent = '🤖';
-    fab.title = 'Open AI Assistant';
-    document.documentElement.appendChild(fab);
-
-    // ── Chat Window ──
-    const chat = document.createElement('div');
-    chat.id = 'usf-ai-window';
-    chat.style.display = 'none';
-    chat.innerHTML = `
-        <div id="usf-ai-header">
-            <strong>🤖 AI Assistant</strong>
-            <button id="usf-ai-close">✕</button>
-        </div>
-        <div id="usf-ai-messages"></div>
-        <div id="usf-ai-input-area">
-            <input type="text" id="usf-ai-input" placeholder="Ask me anything..." autocomplete="off">
-            <button id="usf-ai-send">Send</button>
-        </div>
-    `;
-    document.documentElement.appendChild(chat);
-
-    // ── Toggle Chat ──
-    fab.addEventListener('click', () => {
-        const isOpen = chat.style.display !== 'none';
-        chat.style.display = isOpen ? 'none' : 'flex';
-        fab.style.display = isOpen ? '' : 'none';
-    });
-
-    document.getElementById('usf-ai-close').addEventListener('click', () => {
-        chat.style.display = 'none';
-        fab.style.display = '';
-    });
-
-    // ── Send Message ──
-    function addMessage(text, sender) {
-        const messages = document.getElementById('usf-ai-messages');
-        const msg = document.createElement('div');
-        msg.className = `usf-msg usf-msg-${sender}`;
-        msg.textContent = text;
-        messages.appendChild(msg);
-        messages.scrollTop = messages.scrollHeight;
-    }
-
-    async function sendMessage() {
-        const input = document.getElementById('usf-ai-input');
-        const text = input.value.trim();
-        if (!text) return;
-
-        addMessage(text, 'user');
-        input.value = '';
-        addMessage('Thinking...', 'bot');
-
-        try {
-            // Send to background worker (CORS proxy)
-            const response = await chrome.runtime.sendMessage({
-                action: 'askAI',
-                question: text
-            });
-
-            // Remove "Thinking..."
-            const messages = document.getElementById('usf-ai-messages');
-            messages.removeChild(messages.lastChild);
-
-            if (response && response.answer) {
-                addMessage(response.answer, 'bot');
-            } else {
-                addMessage('Sorry, something went wrong. Try again!', 'bot');
-            }
-        } catch (err) {
-            const messages = document.getElementById('usf-ai-messages');
-            messages.removeChild(messages.lastChild);
-            addMessage('Error: ' + err.message, 'bot');
-        }
-    }
-
-    document.getElementById('usf-ai-send').addEventListener('click', sendMessage);
-    document.getElementById('usf-ai-input').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-
-    console.log('[AI Assistant] Chat widget loaded!');
-})();
+const AZURE_OPENAI_ENDPOINT = 'https://YOUR-RESOURCE.openai.azure.com';  // ← Replace
+const AZURE_OPENAI_KEY = 'YOUR-API-KEY-HERE';                            // ← Replace
 ```
 
-### Step 4: Build the Background Worker (5 min)
+> **Your Hacker Leader will provide the endpoint and key on screen.** If you're using your own Azure account, use your own values.
 
-Create `background.js`:
+⚠️ **Security note:** Never commit API keys to a public repo. This is fine for a hackathon prototype, but in production you'd use a backend proxy or Azure Key Vault.
 
-```javascript
-// ══════════════════════════════════════
-// AI Assistant — Background Service Worker
-// Handles API calls (CORS proxy)
-// ══════════════════════════════════════
+---
 
-// ⚠️ REPLACE THESE with your Azure OpenAI values
-const AZURE_OPENAI_ENDPOINT = 'https://YOUR-RESOURCE.openai.azure.com';
-const AZURE_OPENAI_KEY = 'YOUR-API-KEY-HERE';
-const AZURE_OPENAI_DEPLOYMENT = 'gpt-4o';
-const API_VERSION = '2024-08-01-preview';
-
-// System prompt — defines the AI's personality
-const SYSTEM_PROMPT = `You are a helpful AI assistant embedded in a browser extension. 
-You help university students with questions about technology, coding, and Azure.
-Keep answers concise (under 150 words). Be friendly and encouraging.
-If you don't know something, say so honestly.`;
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'askAI') {
-        callAzureOpenAI(request.question)
-            .then(answer => sendResponse({ answer }))
-            .catch(err => sendResponse({ error: err.message }));
-        return true; // Keep message channel open for async response
-    }
-});
-
-async function callAzureOpenAI(question) {
-    const url = `${AZURE_OPENAI_ENDPOINT}/openai/deployments/${AZURE_OPENAI_DEPLOYMENT}/chat/completions?api-version=${API_VERSION}`;
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'api-key': AZURE_OPENAI_KEY
-        },
-        body: JSON.stringify({
-            messages: [
-                { role: 'system', content: SYSTEM_PROMPT },
-                { role: 'user', content: question }
-            ],
-            max_tokens: 300,
-            temperature: 0.7
-        })
-    });
-
-    if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(`Azure OpenAI error ${response.status}: ${err.error?.message || 'Unknown'}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-}
-
-console.log('[AI Assistant] Background worker ready');
-```
-
-### Step 5: Style It (3 min)
-
-Create `styles.css`:
-
-```css
-#usf-ai-fab {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #006747;
-    color: white;
-    font-size: 28px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    z-index: 999999;
-    transition: transform 0.2s;
-}
-#usf-ai-fab:hover { transform: scale(1.1); }
-
-#usf-ai-window {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 360px;
-    height: 480px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    overflow: hidden;
-}
-
-#usf-ai-header {
-    background: #006747;
-    color: white;
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-#usf-ai-header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-#usf-ai-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px;
-}
-
-.usf-msg {
-    margin: 8px 0;
-    padding: 10px 14px;
-    border-radius: 12px;
-    max-width: 85%;
-    font-size: 14px;
-    line-height: 1.4;
-    word-wrap: break-word;
-}
-.usf-msg-user {
-    background: #006747;
-    color: white;
-    margin-left: auto;
-    border-bottom-right-radius: 4px;
-}
-.usf-msg-bot {
-    background: #f0f0f0;
-    color: #333;
-    border-bottom-left-radius: 4px;
-}
-
-#usf-ai-input-area {
-    display: flex;
-    padding: 8px;
-    border-top: 1px solid #eee;
-    gap: 8px;
-}
-#usf-ai-input {
-    flex: 1;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-}
-#usf-ai-input:focus { border-color: #006747; }
-#usf-ai-send {
-    padding: 10px 16px;
-    background: #006747;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-#usf-ai-send:hover { background: #106ebe; }
-```
-
-### Step 6: Load and Test (5 min)
+### Step 5: Load and Test (5 min)
 
 1. Open `chrome://extensions` (or `edge://extensions`)
 2. Enable **Developer mode** (toggle in top-right)
 3. Click **Load unpacked**
 4. Select your `usf-ai-extension/` folder
-5. Navigate to any website
-6. Click the 🤖 button in the bottom-right
-7. Type a question and press Enter!
+5. Navigate to any website (e.g., `https://www.usf.edu`)
+6. Look for the 🤖 button in the bottom-right corner
+7. Click it, type a question, and press Enter!
 
-### Step 7: Customize Your AI (6 min — remaining time)
+**Troubleshooting — ask your AI assistant!** If something doesn't work, paste the error message back into your AI tool and ask it to fix the code. Common issues:
 
-**Challenge ideas for students:**
+| Error | Likely Cause | Fix |
+|-------|-------------|-----|
+| "Service worker registration failed" | Syntax error in `background.js` | Paste the error into your AI tool |
+| Nothing appears on the page | `content.js` error or manifest issue | Check `chrome://extensions` for errors |
+| "401 Unauthorized" | Wrong API key or endpoint | Double-check values in `background.js` |
+| Extension not showing | Developer mode not enabled | Toggle it on, then reload |
 
-| Challenge | Difficulty | Hint |
-|-----------|-----------|------|
-| Change the AI's personality | ⭐ Easy | Edit `SYSTEM_PROMPT` in background.js |
-| Add a welcome message on chat open | ⭐ Easy | Call `addMessage()` in the click handler |
-| Make it only work on your university website | ⭐ Easy | Change `matches` in manifest.json |
-| Add conversation memory (multi-turn) | ⭐⭐ Medium | Store messages array, send full history to API |
-| Add a "Clear chat" button | ⭐⭐ Medium | Add button to header, clear `usf-ai-messages` innerHTML |
-| Show typing indicator | ⭐⭐ Medium | Animate "..." while waiting for response |
-| Add dark mode | ⭐⭐ Medium | Detect `prefers-color-scheme` and swap CSS |
-| Call a different API (weather, news) | ⭐⭐⭐ Hard | Add a new handler in background.js |
+---
+
+### Step 6: Customize With More Prompts (13 min — remaining time)
+
+Now that your base extension works, **keep vibe coding!** Use more prompts to customize it. Here are ready-to-use follow-up prompts:
+
+**⭐ Easy — Personalize It:**
+> *"Change the AI's personality in the SYSTEM_PROMPT to act as a [pirate / surfer / medieval knight / your choice]. Make it fun and in-character."*
+
+**⭐ Easy — Brand It:**
+> *"Update the extension to use my school's colors and mascot. Change the FAB emoji, header title, and color scheme."*
+
+**⭐⭐ Medium — Add Conversation Memory:**
+> *"Modify background.js to store the conversation history in an array and send the full message history to Azure OpenAI on each request, so the AI remembers previous messages in the chat."*
+
+**⭐⭐ Medium — Add a Clear Chat Button:**
+> *"Add a 🗑️ button next to the close button in the chat header that clears all messages and resets the conversation."*
+
+**⭐⭐ Medium — Dark Mode:**
+> *"Add automatic dark mode support that detects the user's system preference using prefers-color-scheme and adjusts the chat window colors accordingly."*
+
+**⭐⭐⭐ Hard — Summarize the Current Page:**
+> *"Add a 'Summarize this page' button that extracts the main text content from the current webpage and sends it to Azure OpenAI with a prompt asking for a concise summary."*
+
+**⭐⭐⭐ Hard — Voice Input:**
+> *"Add a microphone button that uses the Web Speech API to convert voice input to text, then sends it as a chat message."*
+
+> **Pro tip:** After each change, go to `chrome://extensions` and click the **reload** button (🔄) on your extension, then refresh the page to test.
+
+---
+
+### Reference: What the Files Do
+
+If you want to understand the code your AI generated, here's a quick breakdown:
+
+| File | Role | Key Concept |
+|------|------|------------|
+| `manifest.json` | Extension config — tells Chrome what your extension does | **Manifest V3** — the required format for Chrome extensions |
+| `content.js` | Injected into every webpage — builds the chat UI | **Content Script** — runs in the context of web pages |
+| `background.js` | Runs separately — makes API calls to Azure OpenAI | **Service Worker** — handles CORS by proxying API requests |
+| `styles.css` | Styles the FAB button and chat window | **Injected CSS** — scoped to your extension's elements |
+
+**Why do we need a background worker?** Content scripts can't make cross-origin API calls (blocked by CORS). The service worker acts as a proxy — the content script sends it a message, it calls the API, and sends back the response.
 
 ---
 
@@ -481,7 +292,7 @@ Create `styles.css`:
 
 > **"Create a solution for the USF Community using Azure AI"**
 
-**Ideas to pitch to students:**
+**Ideas to pitch to hackers:**
 
 | Project Idea | Azure Services | Difficulty |
 |-------------|---------------|------------|
@@ -499,8 +310,9 @@ Create `styles.css`:
 1. **Browser extensions are powerful** — they run in the most-used application on any computer
 2. **Azure AI is accessible** — GPT-4o via API is just a REST call
 3. **Security matters from day 1** — never hardcode keys in production, always escape HTML, follow Microsoft AI Principles
-4. **Start simple, iterate fast** — your first extension can be 4 files and 100 lines of code
-5. **The browser is the new platform** — extensions are apps that meet users where they already are
+4. **Vibe coding is real** — you can build a working app with a single well-crafted prompt, then iterate with more prompts
+5. **Start simple, iterate fast** — your first extension can be 4 files and 100 lines of code
+6. **The browser is the new platform** — extensions are apps that meet users where they already are
 
 ---
 
@@ -521,26 +333,32 @@ Before submitting your hackathon project, verify:
 
 ### Before the Workshop
 - [ ] Pre-create Azure OpenAI resource and deploy GPT-4o
-- [ ] Generate API keys for students (or use a shared key with rate limiting)
-- [ ] Test the starter code on both Chrome and Edge
-- [ ] Have the USF AI demo ready on `any webpage`
+- [ ] Generate API keys for hackers (or use a shared key with rate limiting)
+- [ ] Test the single-prompt output on both Chrome and Edge
+- [ ] Have the completed-extension folder ready as a backup/reference
+- [ ] Ensure hackers have GitHub Copilot or access to ChatGPT/similar
 
 ### During the Workshop
-- Walk around during the lab — most issues are typos in `manifest.json`
+- **The single-prompt approach works ~90% of the time.** If a hacker's output has issues, tell them to paste the error back into their AI tool — that's part of the vibe coding workflow
+- Walk around during the lab — most issues are typos in API key configuration
+- If AI-generated code doesn't work, the `completed-extension/` folder in the repo has a working reference
 - Common errors:
-  - "Service worker registration failed" → syntax error in `background.js`
-  - "Cannot read property of null" → element ID typo in `content.js`
+  - "Service worker registration failed" → AI generated invalid JS — paste error back into AI to fix
   - "401 Unauthorized" → wrong API key or endpoint
   - Extension doesn't appear → didn't enable Developer mode
+  - Chat doesn't open → ID mismatch between CSS and JS — tell hacker to ask AI to fix it
 
 ### After the Workshop
 - Share the GitHub repo link for reference
-- Point students to the Azure free tier for continued building
+- Point hackers to the Azure free tier for continued building
 - Encourage them to form teams for the hackathon challenge
+- Remind them: **the best hackathon projects start with a great prompt**
 
 ---
 
-**Workshop created by:** USF Hackathon Workshop  
-**Based on:** USF AI USF AI Assistant (https://github.com/scim-microsoft/USF-AI-Workshop)  
-**Security Framework:** Vibe Secure (https://github.com/samarti_microsoft/vibesecure)
+**Workshop created by:** Santos Martinez  
+**Contributors:** William Gonzalez, Kyarra Gutierrez, Andrea Martini, David Warm, Andre Rodrigues  
+**Event:** Hackabull  
+**Based on:** USF AI Assistant (https://github.com/hanshisantos/USF-AI-Workshop)  
+
 

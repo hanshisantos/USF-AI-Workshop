@@ -2,3 +2,6 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.pem
+
+# Prevent pushing background.js (contains API keys)
+background.js
