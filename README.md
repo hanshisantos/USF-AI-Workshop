@@ -54,6 +54,7 @@ Ideas: Campus FAQ bot, Study buddy, Accessibility assistant, Job posting analyze
 | Resource | Link |
 |----------|------|
 | Chrome Extension Docs | https://developer.chrome.com/docs/extensions/mv3/ |
+| Edge Extension Docs | https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/ |
 | Azure OpenAI Quickstart | https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart |
 | Microsoft AI Principles | https://www.microsoft.com/en-us/ai/principles-and-approach |
 | Azure Free Account | https://azure.microsoft.com/en-us/free/ |

@@ -118,6 +118,7 @@ A Chrome extension that:
 | Resource | URL |
 |----------|-----|
 | Chrome Extension Docs | https://developer.chrome.com/docs/extensions/mv3/ |
+| Edge Extension Docs | https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/ |
 | Azure OpenAI Quickstart | https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart |
 | Azure Bot Service Docs | https://learn.microsoft.com/en-us/azure/bot-service/ |
 | Microsoft AI Principles | https://www.microsoft.com/en-us/ai/principles-and-approach |
