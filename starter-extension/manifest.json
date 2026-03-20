@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "USF AI Assistant",
+  "version": "1.0.0",
+  "description": "AI-powered browser assistant built at the USF Hackathon",
+  "author": "USF Hackathon Team",
+  "homepage_url": "https://www.usf.edu",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": [
+    "https://*.openai.azure.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
+  },
+  "icons": {
+    "48": "icon.png"
+  }
+}
