@@ -1,5 +1,5 @@
 # Azure AI Browser Extension Workshop
-## Lab Manual — Build Your First AI-Powered Chrome Extension
+## Lab Manual — Build Your First AI-Powered Browser Extension
 
 **Author:** Santos Martinez  
 **Contributors:** William Gonzalez, Kyarra Gutierrez, Andrea Martini, David Warm, Andre Rodrigues  
@@ -7,7 +7,7 @@
 
 **Duration:** 1 hour (30-min demo + 30-min hands-on)  
 **Audience:** University hackers, hackathon participants, beginners  
-**Prerequisites:** A laptop with Chrome/Edge, VS Code with GitHub Copilot (or access to any AI assistant)  
+**Prerequisites:** A laptop with a Chromium-based browser (Edge, Chrome, Brave, etc.), VS Code with GitHub Copilot (or access to any AI assistant)  
 **Goal:** Build a working AI chatbot browser extension using a single AI prompt + Azure OpenAI
 
 ---
@@ -21,7 +21,7 @@
 
 ### What Hackers Will Build
 
-A Chrome extension that:
+A browser extension (works on any Chromium-based browser) that:
 1. Shows a floating chat button on any webpage
 2. Lets users type a question
 3. Sends it to Azure OpenAI (GPT-4o) for a response
@@ -36,15 +36,15 @@ A Chrome extension that:
 
 ### Slide 1: What Are Browser Extensions? (3 min)
 
-> "Browser extensions are mini-applications that run inside Chrome or Edge. They can read web pages, add UI elements, and call APIs — all with JavaScript."
+> "Browser extensions are mini-applications that run inside any Chromium-based browser — Edge, Chrome, Brave, Opera, and more. They can read web pages, add UI elements, and call APIs — all with JavaScript."
 
 **Key concepts to explain:**
-- **Manifest V3** — Chrome's extension standard (JSON config file)
+- **Manifest V3** — the Chromium extension standard (JSON config file)
 - **Content Script** — JavaScript injected into web pages
 - **Background Service Worker** — Runs in the background, handles API calls
 - **Popup/Side Panel** — Extension's own UI
 
-**Show:** `chrome://extensions` in developer mode
+**Show:** `edge://extensions` (or `chrome://extensions`) in developer mode
 
 ### Slide 2: The Azure AI Stack (5 min)
 
@@ -117,7 +117,7 @@ A Chrome extension that:
 
 | Resource | URL |
 |----------|-----|
-| Chrome Extension Docs | https://developer.chrome.com/docs/extensions/mv3/ |
+| Chromium Extension Docs | https://developer.chrome.com/docs/extensions/mv3/ |
 | Edge Extension Docs | https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/ |
 | Azure OpenAI Quickstart | https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart |
 | Azure Bot Service Docs | https://learn.microsoft.com/en-us/azure/bot-service/ |
@@ -131,7 +131,7 @@ A Chrome extension that:
 
 ### Prerequisites Checklist
 
-- [ ] Chrome or Edge browser installed
+- [ ] A Chromium-based browser installed (Edge, Chrome, Brave, etc.)
 - [ ] **GitHub Copilot** (in VS Code) or access to **ChatGPT / any AI assistant**
 - [ ] Azure OpenAI API key (provided by Hacker Leader OR use free trial)
 - [ ] VS Code installed
@@ -155,7 +155,7 @@ Open your AI coding assistant (GitHub Copilot Chat, ChatGPT, or any AI tool) and
 > **Copy this entire prompt and paste it into your AI assistant:**
 
 ~~~
-Build me a Chrome browser extension (Manifest V3) called "USF AI Assistant" with these 4 files:
+Build me a Chromium browser extension (Manifest V3) called "USF AI Assistant" with these 4 files:
 
 1. **manifest.json** — Manifest V3, name "USF AI Assistant", version "1.0.0", permissions: activeTab and storage, host_permissions for "https://*.openai.azure.com/*", background service worker (background.js), content script that injects content.js and styles.css on all URLs at document_idle, CSP: script-src 'self'; object-src 'none', icon: icon.png (48px).
 
@@ -165,7 +165,7 @@ Build me a Chrome browser extension (Manifest V3) called "USF AI Assistant" with
    - Toggles the chat open/closed when clicking the FAB or close button
    - On first open, displays a welcome message: "Hey there, Bull! 🐂 I'm your AI Assistant. Ask me anything!"
    - Has an addMessage(text, sender) function that appends styled message bubbles (sender is 'user' or 'bot')
-   - Has a sendMessage() function that: adds the user message, shows "Thinking...", sends the question to the background worker via chrome.runtime.sendMessage with action 'askAI', removes the "Thinking..." message, and displays the response or error
+   - Has a sendMessage() function that: adds the user message, shows "Thinking...", sends the question to the background worker via the browser's runtime.sendMessage API with action 'askAI', removes the "Thinking..." message, and displays the response or error
    - Enter key and Send button both trigger sendMessage()
    - Includes a guard to prevent double-injection
 
@@ -226,7 +226,7 @@ const AZURE_OPENAI_KEY = 'YOUR-API-KEY-HERE';                            // ← 
 
 ### Step 5: Load and Test (5 min)
 
-1. Open `chrome://extensions` (or `edge://extensions`)
+1. Open `edge://extensions` (or `chrome://extensions` for Chrome, `brave://extensions` for Brave, etc.)
 2. Enable **Developer mode** (toggle in top-right)
 3. Click **Load unpacked**
 4. Select your `usf-ai-extension/` folder
@@ -239,7 +239,7 @@ const AZURE_OPENAI_KEY = 'YOUR-API-KEY-HERE';                            // ← 
 | Error | Likely Cause | Fix |
 |-------|-------------|-----|
 | "Service worker registration failed" | Syntax error in `background.js` | Paste the error into your AI tool |
-| Nothing appears on the page | `content.js` error or manifest issue | Check `chrome://extensions` for errors |
+| Nothing appears on the page | `content.js` error or manifest issue | Check `edge://extensions` for errors |
 | "401 Unauthorized" | Wrong API key or endpoint | Double-check values in `background.js` |
 | Extension not showing | Developer mode not enabled | Toggle it on, then reload |
 
@@ -270,7 +270,7 @@ Now that your base extension works, **keep vibe coding!** Use more prompts to cu
 **⭐⭐⭐ Hard — Voice Input:**
 > *"Add a microphone button that uses the Web Speech API to convert voice input to text, then sends it as a chat message."*
 
-> **Pro tip:** After each change, go to `chrome://extensions` and click the **reload** button (🔄) on your extension, then refresh the page to test.
+> **Pro tip:** After each change, go to `edge://extensions` and click the **reload** button (🔄) on your extension, then refresh the page to test.
 
 ---
 
@@ -280,7 +280,7 @@ If you want to understand the code your AI generated, here's a quick breakdown:
 
 | File | Role | Key Concept |
 |------|------|------------|
-| `manifest.json` | Extension config — tells Chrome what your extension does | **Manifest V3** — the required format for Chrome extensions |
+| `manifest.json` | Extension config — tells the browser what your extension does | **Manifest V3** — the required format for Chromium-based browser extensions |
 | `content.js` | Injected into every webpage — builds the chat UI | **Content Script** — runs in the context of web pages |
 | `background.js` | Runs separately — makes API calls to Azure OpenAI | **Service Worker** — handles CORS by proxying API requests |
 | `styles.css` | Styles the FAB button and chat window | **Injected CSS** — scoped to your extension's elements |
@@ -335,7 +335,7 @@ Before submitting your hackathon project, verify:
 ### Before the Workshop
 - [ ] Pre-create Azure OpenAI resource and deploy GPT-4o
 - [ ] Generate API keys for hackers (or use a shared key with rate limiting)
-- [ ] Test the single-prompt output on both Chrome and Edge
+- [ ] Test the single-prompt output on Edge, Chrome, or any Chromium-based browser
 - [ ] Have the completed-extension folder ready as a backup/reference
 - [ ] Ensure hackers have GitHub Copilot or access to ChatGPT/similar
 
