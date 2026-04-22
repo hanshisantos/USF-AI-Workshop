@@ -4,6 +4,8 @@
 **Author:** Santos Martinez  
 **Contributors:** William Gonzalez, Kyarra Gutierrez, Andrea Martini, David Warm, Andre Rodrigues  
 **Event:** Hackabull  
+**Date:** Saturday, April 25th, 1:15 PM – 2:15 PM  
+**Location:** Muma College of Business (4202 E Fowler Ave, Tampa, FL) — Room #115  
 
 **Duration:** 1 hour (30-min demo + 30-min hands-on)  
 **Audience:** University hackers, hackathon participants, beginners  

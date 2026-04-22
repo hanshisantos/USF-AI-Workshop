@@ -2,8 +2,10 @@
 
 > A hands-on workshop for the Azure Essentials track at Hackabull.
 
-**Author:** Santos Martinez  
-**Contributors:** William Gonzalez, Kyarra Gutierrez, Andrea Martini, David Warm, Andre Rodrigues
+**Author:** Santos Martinez [![ORCID](https://img.shields.io/badge/ORCID-0009--0001--5997--303X-green?logo=orcid)](https://orcid.org/0009-0001-5997-303X)  
+**Contributors:** William Gonzalez, Kyarra Gutierrez, Andrea Martini, David Warm, Andre Rodrigues  
+**Date:** Saturday, April 25th, 1:15 PM – 2:15 PM  
+**Location:** Muma College of Business (4202 E Fowler Ave, Tampa, FL) — Room #115
 
 ## 📂 What's Inside
 
