@@ -61,6 +61,14 @@ Ideas: Campus FAQ bot, Study buddy, Accessibility assistant, Job posting analyze
 | Microsoft AI Principles | https://www.microsoft.com/en-us/ai/principles-and-approach |
 | Azure Free Account | https://azure.microsoft.com/en-us/free/ |
 
-## 📄 License
+## � How to Cite This Work
+
+If you use this workshop material in academic or professional work, please cite it using **APA 7th Edition** format:
+
+> Martinez, S. (2026). *USF AI Workshop — Build Your First AI Browser Extension* (Version 1.0.0) [Computer software]. GitHub. https://github.com/hanshisantos/USF-AI-Workshop
+
+A machine-readable citation is also available in [CITATION.cff](CITATION.cff).
+
+## �📄 License
 
 MIT — See [LICENSE](LICENSE) for details.

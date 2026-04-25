@@ -6,16 +6,6 @@ authors:
   - family-names: Martinez
     given-names: Santos
     orcid: "https://orcid.org/0009-0001-5997-303X"
-  - family-names: Gonzalez
-    given-names: William
-  - family-names: Gutierrez
-    given-names: Kyarra
-  - family-names: Martini
-    given-names: Andrea
-  - family-names: Warm
-    given-names: David
-  - family-names: Rodrigues
-    given-names: Andre
 repository-code: "https://github.com/hanshisantos/USF-AI-Workshop"
 url: "https://www.usf.edu"
 keywords:
